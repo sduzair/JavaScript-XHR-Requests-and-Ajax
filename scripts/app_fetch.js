@@ -53,7 +53,6 @@ window.onload = () => {
     provinceField.value !== '') {
         // "https://geocoder.ca/?locate=636%20Montpellier%20Dr,%20Waterloo,%20ON&geoit=xml&json=1"
         let url = 'https://geocoder.ca/?locate=' + streetNumberField.value + '%20' + streetNameField.value.replace(' ', '%20') + ',%20' + cityField.value + ',%20' + provinceField.value + '&geoit=xml&json=1';   
-        // let url = 'https://geocoder.ca/?locate=636%20Montpellier%20Dr,%20Waterloo,%20ON&geoit=xml&json=1';
         createRequest(url, zipUpdateUISuccess, zipUpdateUIError);
     }
   };
@@ -124,8 +123,7 @@ window.onload = () => {
 
   const updateWeatherData = () => {
     if (cityField.value !== "") {
-      // https://api.openweathermap.org/data/2.5/weather?q=Edmonton,CA&appid=e77711033896a864d8dac80ebfe4aa5e&units=metric
-      // let url = 'https://api.openweathermap.org/data/2.5/weather?q=' + cityField.value + ',CA&appid=e77711033896a864d8dac80ebfe4aa5e&units=metric';
+      // let url = 'https://api.openweathermap.org/data/2.5/weather?q=' + cityField.value + ',CA&appid=&units=metric';
       let url = 'https://open-weather-map-ajax-proxy.herokuapp.com/weatherapi/data/2.5/weather?q=' + cityField.value + ',CA';
       createRequest(url, successWeatherUpdateAPI, failedWeatherUpdateAPI);
     }
