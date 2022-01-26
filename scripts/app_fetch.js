@@ -47,16 +47,15 @@ window.onload = () => {
   };
 
   const checkCompletion = () => {
-    // if(streetNumberField.value !==  '' &&
-    // streetNameField.value !== '' &&
-    // cityField.value !== '' &&
-    // provinceField.value !== '') {
-    //     let url = 'https://geocoder.ca/?locate=636%20Montpellier%20Dr,%20Waterloo,%20ON&geoit=xml&json=1';
-    //     createRequest(url, zipUpdateUISuccess, zipUpdateUIError);
-    // }
-    let url =
-      "https://geocoder.ca/?locate=636%20Montpellier%20Dr,%20Waterloo,%20ON&geoit=xml&json=1"; //FOR TESTING
-    createRequest(url, zipUpdateUISuccess, zipUpdateUIError);
+    if(streetNumberField.value !==  '' &&
+    streetNameField.value !== '' &&
+    cityField.value !== '' &&
+    provinceField.value !== '') {
+        // "https://geocoder.ca/?locate=636%20Montpellier%20Dr,%20Waterloo,%20ON&geoit=xml&json=1"
+        let url = 'https://geocoder.ca/?locate=' + streetNumberField.value + '%20' + streetNameField.value.replace(' ', '%20') + ',%20' + cityField.value + ',%20' + provinceField.value + '&geoit=xml&json=1';   
+        // let url = 'https://geocoder.ca/?locate=636%20Montpellier%20Dr,%20Waterloo,%20ON&geoit=xml&json=1';
+        createRequest(url, zipUpdateUISuccess, zipUpdateUIError);
+    }
   };
 
   streetNumberField.addEventListener("blur", checkCompletion);
@@ -84,7 +83,7 @@ window.onload = () => {
 
   const covidUpdateUIFailure = (error) => {
     console.log("Unable to make a request to OpenCovid API " + error);
-    covidUpdateSection.children[0].textContent = "COVID Update ";
+    covidUpdateSection.children[0].textContent = "Unable to make a request to OpenCovid API";
     covidUpdateSection.children[1].textContent = "";
     covidUpdateSection.children[2].textContent =
       "Please enter valid province (two character input)";
@@ -93,15 +92,7 @@ window.onload = () => {
   const updateCovidData = () => {
     if (provinceField.value !== "") {
       let localDate = new Date();
-      let APIURL =
-        "https://api.opencovid.ca/timeseries?stat=cases&loc=" +
-        provinceField.value +
-        "&date=" +
-        `${localDate.getDate() - 1}` +
-        "-" +
-        `${localDate.getMonth() + 1}` +
-        "-" +
-        localDate.getFullYear();
+      let APIURL = "https://api.opencovid.ca/timeseries?stat=cases&loc=" + provinceField.value + "&date=" + `${localDate.getDate() - 1}` + "-" + `${localDate.getMonth() + 1}` + "-" + localDate.getFullYear();
       createRequest(APIURL, covidUpdateUISuccess, covidUpdateUIFailure);
     }
   };
@@ -109,38 +100,37 @@ window.onload = () => {
   provinceField.addEventListener("blur", updateCovidData);
 
 
-  // // WEATHER API...................................................................................
+  // WEATHER API...................................................................................
 
-  // const weaterUpdateSection = document.querySelector('#weatherUpdate');
+  const weaterUpdateSection = document.querySelector('#weatherUpdate');
 
-  // const successWeatherUpdateAPI = (data) => {
-  //   console.log(data);
-  //   // weaterUpdateSection.children[0].textContent =
-  //   //   "COVID Update " + data.cases[0].date_report;
-  //   //   weaterUpdateSection.children[1].textContent =
-  //   //   "Province: " + data.cases[0].province;
-  //   //   weaterUpdateSection.children[2].textContent =
-  //   //   "Cases: " +
-  //   //   data.cases[0].cases +
-  //   //   ", " +
-  //   //   "Cumulative cases: " +
-  //   //   data.cases[0].cumulative_cases;
-  // }
+  const successWeatherUpdateAPI = (data) => {
+    console.log(data);
+    weaterUpdateSection.children[0].textContent = "Weather Update"+ ' ' + data.name;
+    weaterUpdateSection.children[1].textContent = "Feels like: " + data.main.feels_like;
+    weaterUpdateSection.children[2].textContent = "Temperature: " + data.main.temp;
+    weaterUpdateSection.children[3].textContent = "Temperature Max: " + data.main.temp_max;
+    weaterUpdateSection.children[4].textContent = "Temperature Min: " + data.main.temp_min;
+  }
 
-  // const failedWeatherUpdateAPI = (data) => {
-  //   console.log("Unable to make a request to Weather API " + error);
-  //   covidUpdateSection.children[0].textContent = "Weather Update ";
-  //   covidUpdateSection.children[1].textContent = "";
-  //   covidUpdateSection.children[2].textContent = "Please enter valid province (two character input)";    
-  // }
+  const failedWeatherUpdateAPI = (error) => {
+    console.log("Unable to make a request to Weather API " + error);
+    weaterUpdateSection.children[0].textContent = "Unable to make a request to Weather API";
+    weaterUpdateSection.children[1].textContent = '';
+    weaterUpdateSection.children[2].textContent = '';
+    weaterUpdateSection.children[3].textContent = '';
+    weaterUpdateSection.children[4].textContent = '';   
+  }
 
-  // const updateWeatherData = () => {
-  //   if (provinceField.value !== "") {
-  //     let url = 'https://api.openweathermap.org/data/2.5/weather?q=Waterloo,ON,CA&appid=&units=metric';
-  //     createRequest(url, successWeatherUpdateAPI, failedWeatherUpdateAPI);
-  //   }
-  // }
+  const updateWeatherData = () => {
+    if (cityField.value !== "") {
+      // https://api.openweathermap.org/data/2.5/weather?q=Edmonton,CA&appid=e77711033896a864d8dac80ebfe4aa5e&units=metric
+      // let url = 'https://api.openweathermap.org/data/2.5/weather?q=' + cityField.value + ',CA&appid=e77711033896a864d8dac80ebfe4aa5e&units=metric';
+      let url = 'https://open-weather-map-ajax-proxy.herokuapp.com/weatherapi/data/2.5/weather?q=' + cityField.value + ',CA';
+      createRequest(url, successWeatherUpdateAPI, failedWeatherUpdateAPI);
+    }
+  }
 
-  // provinceField.addEventListener("blur", updateWeatherData);
+  cityField.addEventListener("blur", updateWeatherData);
   
 };
