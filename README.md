@@ -10,10 +10,10 @@
  - https://openweathermap.org/api
 
 ## Open COVID API
- - Retreives the updated number of cases and cumulative number of cases. 
+ - Retreives the updated number of cases and cumulative number of cases for a Canadian city. 
  - The API is available at https://api.opencovid.ca. 
 
 ## Geocoder API
- - Retreives Zipcode on typing street address, city and province.
+ - Retreives Zipcode on typing street address, city and province (Canada).
  - https://geocoder.ca/
 
